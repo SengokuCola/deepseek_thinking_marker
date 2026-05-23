@@ -2,7 +2,7 @@
 
 DeepSeek 思考模式 Marker 是一个 MaiBot 插件，用于在 Maisaka planner 和 replyer 的模型请求中插入 DeepSeek V4 思考模式 marker。
 
-当前版本：`0.1.0`
+当前版本：`0.1.1`
 
 ## 功能
 
@@ -37,6 +37,14 @@ avoid_duplicate = true
 ## 使用说明
 
 安装并启用插件后，保持默认配置即可在 Maisaka planner 和 replyer 请求中注入角色沉浸 marker。如需切换为纯分析模式，将 `marker.mode` 改为 `no_inner_os`。
+
+## 更新记录
+
+### 0.1.1
+
+#### 开发侧
+
+- 移除 manifest v2 不支持的顶层字段，避免插件运行器严格校验失败。
 
 ## 许可证
 
