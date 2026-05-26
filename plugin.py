@@ -1,6 +1,6 @@
 """DeepSeek V4 思考模式 marker 注入插件。"""
 
-from typing import Any
+from typing import Any, Literal
 
 from maibot_sdk import Field, HookHandler, MaiBotPlugin, PluginConfigBase
 from maibot_sdk.types import ErrorPolicy, HookMode, HookOrder
@@ -32,25 +32,59 @@ class PluginSectionConfig(PluginConfigBase):
     __ui_icon__ = "sparkles"
     __ui_order__ = 0
 
-    enabled: bool = Field(default=True, description="是否启用插件")
-    config_version: str = Field(default="0.1.0", description="配置版本")
+    enabled: bool = Field(
+        default=True,
+        description="关闭后插件将停止工作，不再注入任何思考模式标记",
+        json_schema_extra={"label": "启用插件"},
+    )
+    config_version: str = Field(
+        default="0.1.0",
+        description="配置版本号，用于兼容性追踪，通常无需手动修改",
+        json_schema_extra={"label": "配置版本", "advanced": True},
+    )
 
 
 class MarkerConfig(PluginConfigBase):
-    """Marker 注入配置。"""
+    """思考模式注入配置。"""
 
-    __ui_label__ = "Marker"
+    __ui_label__ = "思考模式注入"
     __ui_icon__ = "message-square-plus"
     __ui_order__ = 1
 
-    mode: str = Field(
+    mode: Literal["inner_os", "no_inner_os", "custom", "default"] = Field(
         default="inner_os",
-        description="注入模式：inner_os=角色沉浸，no_inner_os=纯分析，custom=自定义，default=不注入",
+        description="选择要注入到模型请求中的思考模式类型",
+        json_schema_extra={
+            "label": "注入模式",
+            "x-widget": "select",
+            "x-enum-labels": {
+                "inner_os": "角色沉浸 — 以角色第一人称进行内心独白",
+                "no_inner_os": "纯分析 — 禁止角色扮演式内心戏，聚焦剧情分析",
+                "custom": "自定义文本 — 使用下方自定义内容",
+                "default": "不注入 — 关闭标记注入",
+            },
+        },
     )
-    custom_marker: str = Field(default="", description="mode=custom 时注入的完整 marker 文本")
-    inject_planner: bool = Field(default=True, description="是否在 planner 请求中注入 marker")
-    inject_replyer: bool = Field(default=True, description="是否在 replyer 请求中注入 marker")
-    avoid_duplicate: bool = Field(default=True, description="检测到已有 marker 时不重复注入")
+    custom_marker: str = Field(
+        default="",
+        description="当注入模式为「自定义」时，此处填写完整的注入文本",
+        json_schema_extra={"label": "自定义注入文本", "placeholder": "请输入自定义的思考模式提示词…"},
+    )
+    inject_planner: bool = Field(
+        default=True,
+        description="启用后会在规划器调用模型前注入思考模式标记",
+        json_schema_extra={"label": "注入到规划器"},
+    )
+    inject_replyer: bool = Field(
+        default=True,
+        description="启用后会在回复器调用模型前注入思考模式标记",
+        json_schema_extra={"label": "注入到回复器"},
+    )
+    avoid_duplicate: bool = Field(
+        default=True,
+        description="检测到消息中已存在思考模式标记时自动跳过，避免重复注入",
+        json_schema_extra={"label": "避免重复注入"},
+    )
 
 
 class DeepSeekThinkingMarkerConfig(PluginConfigBase):
