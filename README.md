@@ -2,7 +2,7 @@
 
 DeepSeek 思考模式 Marker 是一个 MaiBot 插件，用于在 Maisaka planner 和 replyer 的模型请求中插入 DeepSeek V4 思考模式 marker。
 
-当前版本：`0.1.2`
+当前版本：`0.1.3`
 
 ## 功能
 
@@ -16,7 +16,7 @@ DeepSeek 思考模式 Marker 是一个 MaiBot 插件，用于在 Maisaka planner
 ```toml
 [plugin]
 enabled = true
-config_version = "0.1.2"
+config_version = "0.1.3"
 
 [marker]
 mode = "inner_os"
@@ -24,7 +24,6 @@ custom_marker = """
 """
 inject_planner = true
 inject_replyer = true
-avoid_duplicate = true
 ```
 
 ## 配置项说明
@@ -33,7 +32,6 @@ avoid_duplicate = true
 - `marker.custom_marker`：`mode = "custom"` 时注入的完整 marker 文本，支持 TOML 多行字符串。
 - `marker.inject_planner`：是否在 planner 请求中注入 marker。
 - `marker.inject_replyer`：是否在 replyer 请求中注入 marker。
-- `marker.avoid_duplicate`：检测到已有内置 marker 标题时不重复注入。
 
 ## 使用说明
 
@@ -51,10 +49,9 @@ custom_marker = """
 """
 inject_planner = true
 inject_replyer = true
-avoid_duplicate = true
 ```
 
-`avoid_duplicate = true` 时，插件会检查请求中是否已经包含内置 marker 标题或完整自定义 marker，避免重复插入。
+插件会自动检查请求中是否已经包含内置 marker 标题或完整自定义 marker，避免重复插入。
 
 ## 更新记录
 
@@ -72,7 +69,13 @@ avoid_duplicate = true
 
 #### 开发侧
 
-- 自定义 marker 已存在时会随 `avoid_duplicate` 一起跳过重复注入。
+- 自定义 marker 已存在时也会跳过重复注入。
+
+### 0.1.3
+
+#### 用户感知功能侧
+
+- 移除 `marker.avoid_duplicate` 配置项，插件始终自动避免重复注入 marker。
 
 ## 许可证
 

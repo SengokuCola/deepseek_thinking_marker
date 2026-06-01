@@ -33,7 +33,7 @@ class PluginSectionConfig(PluginConfigBase):
     __ui_order__ = 0
 
     enabled: bool = Field(default=True, description="是否启用插件")
-    config_version: str = Field(default="0.1.2", description="配置版本")
+    config_version: str = Field(default="0.1.3", description="配置版本")
 
 
 class MarkerConfig(PluginConfigBase):
@@ -50,7 +50,6 @@ class MarkerConfig(PluginConfigBase):
     custom_marker: str = Field(default="", description="mode=custom 时注入的完整 marker 文本")
     inject_planner: bool = Field(default=True, description="是否在 planner 请求中注入 marker")
     inject_replyer: bool = Field(default=True, description="是否在 replyer 请求中注入 marker")
-    avoid_duplicate: bool = Field(default=True, description="检测到已有 marker 时不重复注入")
 
 
 class DeepSeekThinkingMarkerConfig(PluginConfigBase):
@@ -106,8 +105,6 @@ class DeepSeekThinkingMarkerPlugin(MaiBotPlugin):
         return ""
 
     def _has_existing_marker(self, messages: list[dict[str, Any]]) -> bool:
-        if not self.config.marker.avoid_duplicate:
-            return False
         for message in messages:
             if str(message.get("role") or "").strip().lower() != "user":
                 continue
