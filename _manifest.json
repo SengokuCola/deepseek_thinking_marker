@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "name": "DeepSeek 思考模式 Marker",
   "description": "在 Maisaka planner 和 replyer 请求的第一条 user message 位置注入 DeepSeek V4 思考模式 marker，支持角色沉浸、纯分析和自定义模式。",
   "author": {
@@ -8,6 +8,7 @@
     "url": "https://github.com/SengokuCola"
   },
   "license": "GPL-v3.0-or-later",
+  "plugin_type": "extension",
   "urls": {
     "repository": "https://github.com/SengokuCola/deepseek_thinking_marker",
     "homepage": "https://github.com/SengokuCola/deepseek_thinking_marker",
@@ -24,6 +25,14 @@
   },
   "dependencies": [],
   "capabilities": [],
+  "display": {
+    "icon": {
+      "type": "local",
+      "value": "icon.jpg",
+      "fallback": "puzzle",
+      "background": "#F0E1C7"
+    }
+  },
   "i18n": {
     "default_locale": "zh-CN",
     "supported_locales": [

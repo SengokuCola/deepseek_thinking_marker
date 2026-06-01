@@ -33,7 +33,7 @@ class PluginSectionConfig(PluginConfigBase):
     __ui_order__ = 0
 
     enabled: bool = Field(default=True, description="是否启用插件")
-    config_version: str = Field(default="0.1.0", description="配置版本")
+    config_version: str = Field(default="0.1.2", description="配置版本")
 
 
 class MarkerConfig(PluginConfigBase):
@@ -114,6 +114,9 @@ class DeepSeekThinkingMarkerPlugin(MaiBotPlugin):
             text = self._extract_message_text(message)
             if any(title in text for title in MARKER_TITLES):
                 return True
+            custom_marker = str(self.config.marker.custom_marker or "").strip()
+            if custom_marker and custom_marker in text:
+                return True
         return False
 
     def _inject_marker_message(self, messages: Any) -> Any:
@@ -152,7 +155,7 @@ class DeepSeekThinkingMarkerPlugin(MaiBotPlugin):
         description="在 planner 请求第一条 user message 位置注入 DeepSeek 思考模式 marker。",
         mode=HookMode.BLOCKING,
         order=HookOrder.EARLY,
-        timeout_ms=3000,
+        timeout_ms=90000,
         error_policy=ErrorPolicy.SKIP,
     )
     async def inject_planner_marker(self, **kwargs: Any) -> dict[str, Any]:
@@ -169,7 +172,7 @@ class DeepSeekThinkingMarkerPlugin(MaiBotPlugin):
         description="在 replyer 请求第一条 user message 位置注入 DeepSeek 思考模式 marker。",
         mode=HookMode.BLOCKING,
         order=HookOrder.EARLY,
-        timeout_ms=3000,
+        timeout_ms=90000,
         error_policy=ErrorPolicy.SKIP,
     )
     async def inject_replyer_marker(self, **kwargs: Any) -> dict[str, Any]:
